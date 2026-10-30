@@ -33,8 +33,11 @@
     <main class="center-stage">
       <div class="board-frame" id="board-frame">
         <div id="board" class="game-board" role="grid" aria-label="Bàn cờ X O"></div>
+        <div id="win-overlay" class="win-overlay" role="alert" aria-live="assertive">
+          <div class="win-badge" id="win-badge">X CHIẾN THẮNG</div>
+          <div class="win-hint">Nhấp vào bất kỳ đâu để chơi lại</div>
+        </div>
       </div>
-      <div id="game-toast" class="game-toast" role="status"></div>
     </main>
 
     <div id="sidebar-backdrop" class="sidebar-backdrop"></div>

@@ -1,5 +1,5 @@
 /**
- * App Controller - Quản lý Giao diện, Sidebar Cài đặt, Bàn cờ Full Màn hình
+ * App Controller - Quản lý Giao diện, Victory Overlay, Tự Động Reset
  */
 document.addEventListener('DOMContentLoaded', () => {
   const colorManager = new ColorManager('#0a0a0a', '#777777');
@@ -8,10 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // DOM Elements
   const boardEl = document.getElementById('board');
   const boardFrame = document.getElementById('board-frame');
+  const winOverlay = document.getElementById('win-overlay');
+  const winBadge = document.getElementById('win-badge');
   const scoreXEl = document.getElementById('score-x');
   const scoreOEl = document.getElementById('score-o');
   const scoreDrawEl = document.getElementById('score-draw');
-  const gameToast = document.getElementById('game-toast');
   const winRuleHint = document.getElementById('win-rule-hint');
 
   // Sidebar & Controls
@@ -40,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cellFontSize = Math.max(12, Math.floor((frameSize / engine.size) * 0.58));
     const cellRadius = Math.max(4, Math.floor(36 / engine.size));
     boardEl.style.gap = `${engine.size > 8 ? 3 : 6}px`;
-    gameToast.classList.remove('show');
+    winOverlay.classList.remove('show');
 
     for (let r = 0; r < engine.size; r++) {
       for (let c = 0; c < engine.size; c++) {
@@ -60,7 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function handleCellClick(row, col, cellEl) {
-    if (engine.isGameOver || cellEl.textContent !== '') return;
+    if (engine.isGameOver) { startNewGame(); return; }
+    if (cellEl.textContent !== '') return;
 
     const currentPlayer = engine.currentPlayer;
     const moveResult = engine.makeMove(row, col);
@@ -77,17 +79,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const winEl = boardEl.querySelector(`[data-row="${r}"][data-col="${c}"]`);
         if (winEl) winEl.classList.add('winning');
       });
-      showToast(`Quân ${moveResult.winner} chiến thắng!`);
+      displayGameOver(moveResult.winner);
     } else if (moveResult.status === 'draw') {
-      showToast('Trận đấu hòa!');
+      displayGameOver('draw');
     }
     updateScores();
   }
 
-  function showToast(msg) {
-    gameToast.textContent = msg;
-    gameToast.classList.add('show');
+  function displayGameOver(winner) {
+    if (winner === 'draw') {
+      winBadge.textContent = 'TRẬN ĐẤU HÒA!';
+      winBadge.style.color = '#111111';
+    } else {
+      winBadge.textContent = `QUÂN ${winner} CHIẾN THẮNG!`;
+      winBadge.style.color = colorManager.getColor(winner);
+    }
+    winOverlay.classList.add('show');
   }
+
+  winOverlay.addEventListener('click', () => startNewGame());
 
   function updateScores() {
     scoreXEl.textContent = engine.scores.X;
@@ -147,10 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  function toggleEasterEgg(show) {
-    easterModal.classList.toggle('open', show);
-  }
-
+  function toggleEasterEgg(show) { easterModal.classList.toggle('open', show); }
   window.addEventListener('keydown', (e) => {
     if (e.altKey && (e.key === 'a' || e.key === 'A' || e.code === 'KeyA')) {
       e.preventDefault();

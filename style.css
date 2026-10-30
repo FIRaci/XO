@@ -33,7 +33,7 @@ body { background: var(--bg-app); color: var(--text-primary); font-family: var(-
 .board-frame {
   width: var(--board-max-size); height: var(--board-max-size); max-width: 660px; max-height: 660px;
   aspect-ratio: 1 / 1; background: var(--bg-surface); border: 2px solid var(--border-strong);
-  border-radius: 20px; padding: 8px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); display: flex;
+  border-radius: 20px; padding: 8px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); display: flex; position: relative;
 }
 .game-board { display: grid; width: 100%; height: 100%; gap: 6px; }
 .cell {
@@ -51,14 +51,22 @@ body { background: var(--bg-app); color: var(--text-primary); font-family: var(-
 }
 @keyframes pulse-win { from { transform: scale(1); } to { transform: scale(1.05); } }
 
-/* Toast */
-.game-toast {
-  position: absolute; bottom: 20px; left: 50%; transform: translate3d(-50%, 15px, 0);
-  background: var(--border-strong); color: #ffffff; padding: 9px 24px; border-radius: 30px;
-  font-size: 0.95rem; font-weight: 700; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-  opacity: 0; pointer-events: none; visibility: hidden; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+/* Victory / Game Over Overlay */
+.win-overlay {
+  position: absolute; inset: 0; background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(4px); border-radius: 18px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 12px; opacity: 0; pointer-events: none;
+  visibility: hidden; cursor: pointer; transform: scale(0.95); z-index: 20;
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s ease;
 }
-.game-toast.show { opacity: 1; pointer-events: auto; visibility: visible; transform: translate3d(-50%, 0, 0); }
+.win-overlay.show { opacity: 1; pointer-events: auto; visibility: visible; transform: scale(1); }
+.win-badge { font-size: 2.2rem; font-weight: 900; letter-spacing: 2px; text-align: center; }
+.win-hint {
+  font-size: 0.88rem; color: var(--text-primary); font-weight: 700; padding: 6px 16px;
+  background: var(--bg-surface); border: 1.5px solid var(--border-strong); border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); animation: bounce-subtle 1.2s ease-in-out infinite;
+}
+@keyframes bounce-subtle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
 
 /* Hardware-Accelerated Sidebar */
 .sidebar-backdrop {
