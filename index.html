@@ -3,102 +3,110 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>XO Minimalist // Tic-Tac-Toe</title>
+  <title>X O</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="app-container">
-    <header class="app-header">
-      <h1 class="logo">X // O</h1>
-      <p class="tagline">Trò chơi Cờ Caro & Tic-Tac-Toe Tối Giản</p>
+  <div class="app-layout">
+    <!-- Header: Tên trang web & Bảng tỉ số ngay bên dưới -->
+    <header class="top-nav">
+      <div class="title-section">
+        <h1 class="brand-title">X O</h1>
+        <div class="scoreboard-under-title" id="scoreboard">
+          <span class="score-item">X: <strong id="score-x">0</strong></span>
+          <span class="score-sep">|</span>
+          <span class="score-item">Hòa: <strong id="score-draw">0</strong></span>
+          <span class="score-sep">|</span>
+          <span class="score-item">O: <strong id="score-o">0</strong></span>
+        </div>
+      </div>
+
+      <!-- Nút thao tác nhanh trên góc -->
+      <div class="nav-actions">
+        <button type="button" id="btn-quick-reset" class="btn-icon" title="Chơi lại ván mới" aria-label="Chơi lại">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        </button>
+        <button type="button" id="btn-open-settings" class="btn-icon" title="Cài đặt bàn cờ & màu sắc" aria-label="Cài đặt">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+      </div>
     </header>
 
-    <main class="game-wrapper">
-      <!-- Bảng điều khiển thiết lập -->
-      <section class="controls-panel" aria-label="Game Settings">
-        <div class="control-group">
-          <label class="group-title">Kích thước bàn cờ</label>
-          <div class="size-presets">
-            <button type="button" class="btn-preset active" data-size="3">3 × 3</button>
-            <button type="button" class="btn-preset" data-size="4">4 × 4</button>
-            <button type="button" class="btn-preset" data-size="5">5 × 5</button>
-          </div>
-          <div class="custom-size-form">
-            <label for="custom-size-input" class="visually-hidden">Tự nhập kích thước</label>
-            <input type="number" id="custom-size-input" min="3" max="15" placeholder="Tự nhập (3-15)" aria-label="Tự nhập kích thước N">
-            <button type="button" id="btn-apply-size" class="btn-action">Áp dụng</button>
-          </div>
-          <span class="win-rule-hint" id="win-rule-hint">Luật thắng: 3 ô liên tiếp</span>
-        </div>
-
-        <div class="control-group">
-          <label class="group-title">Tùy chọn màu sắc</label>
-          <div class="color-selectors">
-            <div class="color-picker-item">
-              <span class="player-label">Quân X:</span>
-              <input type="color" id="color-x" value="#111111" title="Chọn màu cho X">
-              <span class="color-hex" id="hex-x">#111111</span>
-            </div>
-            <div class="color-picker-item">
-              <span class="player-label">Quân O:</span>
-              <input type="color" id="color-o" value="#888888" title="Chọn màu cho O">
-              <span class="color-hex" id="hex-o">#888888</span>
-            </div>
-          </div>
-          <div id="color-error-msg" class="color-error hidden" role="alert">
-            Màu của X và O phải khác nhau! Vui lòng chọn màu khác.
-          </div>
-        </div>
-
-        <div class="control-group action-group">
-          <button type="button" id="btn-reset" class="btn-action btn-primary">Chơi ván mới</button>
-          <button type="button" id="btn-reset-scores" class="btn-action btn-secondary">Đặt lại tỉ số</button>
-        </div>
-      </section>
-
-      <!-- Khu vực hiển thị trận đấu -->
-      <section class="gameplay-panel">
-        <div class="status-bar" id="status-bar">
-          <div class="turn-indicator">
-            Lượt đi: <span id="current-player-display" class="player-badge">X</span>
-          </div>
-          <div class="scoreboard">
-            <span>X: <strong id="score-x">0</strong></span>
-            <span class="score-divider">|</span>
-            <span>Hòa: <strong id="score-draw">0</strong></span>
-            <span class="score-divider">|</span>
-            <span>O: <strong id="score-o">0</strong></span>
-          </div>
-        </div>
-
-        <div class="board-container">
-          <div id="board" class="board" role="grid" aria-label="Bàn cờ XO"></div>
-        </div>
-      </section>
+    <!-- Khu vực trung tâm: Bàn cờ chiếm gần full màn hình -->
+    <main class="center-stage">
+      <div class="board-frame" id="board-frame">
+        <div id="board" class="game-board" role="grid" aria-label="Bàn cờ X O"></div>
+      </div>
+      <div id="game-toast" class="game-toast hidden" role="status"></div>
     </main>
 
-    <footer class="app-footer">
-      <p class="hint-text">Gợi ý: Nhấn <kbd>Alt</kbd> + <kbd>A</kbd> để kích hoạt điều bất ngờ.</p>
-    </footer>
-  </div>
+    <!-- Sidebar Cài Đặt (Mặc định ẩn) -->
+    <div id="sidebar-backdrop" class="sidebar-backdrop hidden"></div>
+    <aside id="settings-sidebar" class="settings-sidebar" aria-label="Cài đặt trò chơi">
+      <div class="sidebar-header">
+        <h2>Cài đặt</h2>
+        <button type="button" id="btn-close-settings" class="btn-icon" aria-label="Đóng cài đặt">&times;</button>
+      </div>
 
-  <!-- Easter Egg Modal (Alt + A) -->
-  <div id="easter-egg-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-    <div class="modal-card">
-      <div class="modal-header">
-        <span class="badge-egg">EASTER EGG // ALT + A</span>
-        <button type="button" id="btn-close-modal" class="btn-close" aria-label="Đóng">&times;</button>
+      <div class="sidebar-content">
+        <!-- Kích thước bàn cờ -->
+        <section class="config-card">
+          <label class="card-title">Kích thước bàn cờ</label>
+          <div class="preset-row">
+            <button type="button" class="btn-pill active" data-size="3">3 × 3</button>
+            <button type="button" class="btn-pill" data-size="4">4 × 4</button>
+            <button type="button" class="btn-pill" data-size="5">5 × 5</button>
+          </div>
+          <div class="custom-row">
+            <input type="number" id="custom-size-input" min="3" max="15" placeholder="Tự nhập (3 - 15)">
+            <button type="button" id="btn-apply-size" class="btn-submit">Áp dụng</button>
+          </div>
+          <p class="rule-hint" id="win-rule-hint">Luật thắng: 3 ô liên tiếp</p>
+        </section>
+
+        <!-- Màu sắc quân cờ -->
+        <section class="config-card">
+          <label class="card-title">Màu sắc quân cờ</label>
+          <div class="color-list">
+            <div class="color-row">
+              <span class="color-tag">Quân X:</span>
+              <input type="color" id="color-x" value="#0a0a0a">
+              <span class="hex-text" id="hex-x">#0A0A0A</span>
+            </div>
+            <div class="color-row">
+              <span class="color-tag">Quân O:</span>
+              <input type="color" id="color-o" value="#777777">
+              <span class="hex-text" id="hex-o">#777777</span>
+            </div>
+          </div>
+          <div id="color-error-msg" class="error-badge hidden">Màu của X và O không được trùng hoặc quá giống nhau!</div>
+        </section>
+
+        <!-- Hành động -->
+        <div class="sidebar-actions">
+          <button type="button" id="btn-reset-game" class="btn-solid">Chơi ván mới</button>
+          <button type="button" id="btn-reset-scores" class="btn-outline">Đặt lại tỉ số</button>
+        </div>
       </div>
-      <div class="modal-body">
-        <p id="modal-title" class="egg-quote">“Hát ét rờ là một tựa game peak pít”</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" id="btn-dismiss-modal" class="btn-action btn-primary">Xác nhận</button>
+    </aside>
+
+    <!-- Modal Easter Egg: Alt + A -->
+    <div id="easter-egg-modal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <div class="modal-head">
+          <span class="badge">EASTER EGG // ALT + A</span>
+          <button type="button" id="btn-close-modal" class="btn-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p class="quote">“Hát ét rờ là một tựa game peak pít”</p>
+        </div>
+        <div class="modal-foot">
+          <button type="button" id="btn-dismiss-modal" class="btn-solid">Xác nhận</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Scripts tách module theo quy chuẩn < 200 LOC -->
   <script src="js/color-manager.js"></script>
   <script src="js/game-engine.js"></script>
   <script src="js/app.js"></script>

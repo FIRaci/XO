@@ -19,3 +19,4 @@
 
 ### 3. Cập nhật mã nguồn
 - Mỗi khi đẩy commit mới lên nhánh `main`, Vercel sẽ tự động kích hoạt tính năng Continuous Deployment và cập nhật web tức thì.
+

@@ -14,3 +14,4 @@
 - Không sử dụng thư viện cồng kềnh (No JQuery, No heavy framework).
 - Tối ưu DOM manipulation: Render bàn cờ một lần và cập nhật nội dung ô khi click.
 - Đảm bảo khả năng truy cập (Accessibility: `aria-label`, `role="button"`, `role="grid"`).
+

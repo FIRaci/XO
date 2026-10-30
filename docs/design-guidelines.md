@@ -12,3 +12,4 @@
 - Hover trên ô trống: Đổi nền sang xám nhẹ `#f0f0f0`.
 - Ô chiến thắng: Invert màu nền thành đen hoàn toàn với chữ trắng cùng animation `pulse-win`.
 - Modal Easter Egg: Hộp thoại viền đen với bóng đổ phẳng (`box-shadow: 6px 6px 0px #000000`) phong cách Neo-brutalism.
+

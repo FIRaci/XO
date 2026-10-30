@@ -7,3 +7,4 @@
 - `js/game-engine.js`: Xử lý mảng ma trận bàn cờ, cơ chế đổi lượt X/O, kiểm tra 4 hướng thắng (ngang, dọc, 2 đường chéo) theo luật Tic-Tac-Toe & Caro.
 - `js/app.js`: Tầng Controller gắn kết sự kiện DOM, render bàn cờ động theo kích thước, lắng nghe phím tắt `Alt + A`.
 - `vercel.json`: Tệp cấu hình định tuyến tĩnh cho Vercel.
+

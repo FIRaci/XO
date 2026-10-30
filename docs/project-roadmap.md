@@ -13,3 +13,4 @@
 - [ ] Tính năng Undo / Redo nước đi.
 - [ ] Âm thanh click phím gỗ tối giản (Minimalist wooden sound effects).
 - [ ] Chế độ chơi Online qua WebRTC Peer-to-Peer.
+

@@ -1,22 +1,30 @@
 /**
- * App Controller - Kết nối GameEngine, ColorManager và Giao diện người dùng
+ * App Controller - Quản lý Giao diện, Sidebar Cài đặt, Bàn cờ Full Màn hình
  */
 document.addEventListener('DOMContentLoaded', () => {
-  const colorManager = new ColorManager();
+  const colorManager = new ColorManager('#0a0a0a', '#777777');
   const engine = new GameEngine(3);
 
   // DOM Elements
   const boardEl = document.getElementById('board');
-  const turnDisplay = document.getElementById('current-player-display');
+  const boardFrame = document.getElementById('board-frame');
   const scoreXEl = document.getElementById('score-x');
   const scoreOEl = document.getElementById('score-o');
   const scoreDrawEl = document.getElementById('score-draw');
+  const gameToast = document.getElementById('game-toast');
   const winRuleHint = document.getElementById('win-rule-hint');
+
+  // Sidebar & Controls
+  const sidebar = document.getElementById('settings-sidebar');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  const btnOpenSettings = document.getElementById('btn-open-settings');
+  const btnCloseSettings = document.getElementById('btn-close-settings');
+  const btnQuickReset = document.getElementById('btn-quick-reset');
+  const btnResetGame = document.getElementById('btn-reset-game');
+  const btnResetScores = document.getElementById('btn-reset-scores');
+  const presetButtons = document.querySelectorAll('.btn-pill');
   const customSizeInput = document.getElementById('custom-size-input');
   const btnApplySize = document.getElementById('btn-apply-size');
-  const btnReset = document.getElementById('btn-reset');
-  const btnResetScores = document.getElementById('btn-reset-scores');
-  const presetButtons = document.querySelectorAll('.btn-preset');
 
   // Easter Egg Elements
   const easterModal = document.getElementById('easter-egg-modal');
@@ -26,13 +34,13 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderBoard() {
     boardEl.innerHTML = '';
     boardEl.style.gridTemplateColumns = `repeat(${engine.size}, 1fr)`;
+    boardEl.style.gridTemplateRows = `repeat(${engine.size}, 1fr)`;
 
-    // Tính kích thước ô cờ linh hoạt theo kích thước N
-    let cellSize = 80;
-    if (engine.size === 4) cellSize = 68;
-    else if (engine.size === 5) cellSize = 56;
-    else if (engine.size > 5) cellSize = Math.max(34, Math.floor(380 / engine.size));
-    document.documentElement.style.setProperty('--cell-size', `${cellSize}px`);
+    const frameSize = boardFrame.clientWidth || 450;
+    const cellFontSize = Math.max(12, Math.floor((frameSize / engine.size) * 0.58));
+    const cellRadius = Math.max(4, Math.floor(36 / engine.size));
+    boardEl.style.gap = `${engine.size > 8 ? 3 : 6}px`;
+    gameToast.classList.add('hidden');
 
     for (let r = 0; r < engine.size; r++) {
       for (let c = 0; c < engine.size; c++) {
@@ -40,14 +48,13 @@ document.addEventListener('DOMContentLoaded', () => {
         cell.className = 'cell';
         cell.dataset.row = r;
         cell.dataset.col = c;
+        cell.style.fontSize = `${cellFontSize}px`;
+        cell.style.borderRadius = `${cellRadius}px`;
         cell.setAttribute('role', 'button');
-        cell.setAttribute('tabindex', '0');
         cell.addEventListener('click', () => handleCellClick(r, c, cell));
         boardEl.appendChild(cell);
       }
     }
-
-    updateStatus();
     winRuleHint.textContent = `Luật thắng: ${engine.winTarget} ô liên tiếp`;
   }
 
@@ -62,28 +69,20 @@ document.addEventListener('DOMContentLoaded', () => {
     cellEl.style.color = colorManager.getColor(currentPlayer);
 
     if (moveResult.status === 'win') {
-      highlightWinningCells(moveResult.winningCells);
-      turnDisplay.textContent = `${moveResult.winner} THẮNG!`;
-      turnDisplay.style.color = colorManager.getColor(moveResult.winner);
+      moveResult.winningCells.forEach(({ row: r, col: c }) => {
+        const winEl = boardEl.querySelector(`[data-row="${r}"][data-col="${c}"]`);
+        if (winEl) winEl.classList.add('winning');
+      });
+      showToast(`Quân ${moveResult.winner} chiến thắng!`);
     } else if (moveResult.status === 'draw') {
-      turnDisplay.textContent = 'HÒA!';
-      turnDisplay.style.color = '#000000';
-    } else {
-      updateStatus();
+      showToast('Trận đấu hòa!');
     }
     updateScores();
   }
 
-  function highlightWinningCells(cells) {
-    cells.forEach(({ row, col }) => {
-      const cellEl = boardEl.querySelector(`[data-row="${row}"][data-col="${col}"]`);
-      if (cellEl) cellEl.classList.add('winning');
-    });
-  }
-
-  function updateStatus() {
-    turnDisplay.textContent = engine.currentPlayer;
-    turnDisplay.style.color = colorManager.getColor(engine.currentPlayer);
+  function showToast(msg) {
+    gameToast.textContent = msg;
+    gameToast.classList.remove('hidden');
   }
 
   function updateScores() {
@@ -98,27 +97,25 @@ document.addEventListener('DOMContentLoaded', () => {
     renderBoard();
   }
 
-  // Khi màu sắc thay đổi, cập nhật lại các quân cờ đang có trên bàn
-  colorManager.setOnChange((colors) => {
-    boardEl.querySelectorAll('.cell').forEach((cell) => {
-      if (cell.textContent === 'X') cell.style.color = colors.X;
-      else if (cell.textContent === 'O') cell.style.color = colors.O;
-    });
-    if (!engine.isGameOver) updateStatus();
-  });
+  function toggleSidebar(open) {
+    sidebar.classList.toggle('open', open);
+    backdrop.classList.toggle('hidden', !open);
+  }
 
-  // Sự kiện chọn kích thước nhanh
+  btnOpenSettings.addEventListener('click', () => toggleSidebar(true));
+  btnCloseSettings.addEventListener('click', () => toggleSidebar(false));
+  backdrop.addEventListener('click', () => toggleSidebar(false));
+
   presetButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
       presetButtons.forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
-      const size = parseInt(btn.dataset.size, 10);
       customSizeInput.value = '';
-      startNewGame(size);
+      startNewGame(parseInt(btn.dataset.size, 10));
+      toggleSidebar(false);
     });
   });
 
-  // Sự kiện tự nhập kích thước N
   btnApplySize.addEventListener('click', () => {
     const val = parseInt(customSizeInput.value, 10);
     if (isNaN(val) || val < 3 || val > 15) {
@@ -127,17 +124,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     presetButtons.forEach((b) => b.classList.remove('active'));
     startNewGame(val);
+    toggleSidebar(false);
   });
 
-  // Nút Chơi lại và Đặt lại tỉ số
-  btnReset.addEventListener('click', () => startNewGame());
+  btnQuickReset.addEventListener('click', () => startNewGame());
+  btnResetGame.addEventListener('click', () => { startNewGame(); toggleSidebar(false); });
   btnResetScores.addEventListener('click', () => {
     engine.resetScores();
     updateScores();
     startNewGame();
+    toggleSidebar(false);
   });
 
-  // Easter Egg: Phím tắt Alt + A
+  colorManager.setOnChange((colors) => {
+    boardEl.querySelectorAll('.cell').forEach((cell) => {
+      if (cell.textContent === 'X') cell.style.color = colors.X;
+      else if (cell.textContent === 'O') cell.style.color = colors.O;
+    });
+  });
+
   function toggleEasterEgg(show) {
     easterModal.classList.toggle('hidden', !show);
   }
@@ -146,8 +151,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.altKey && (e.key === 'a' || e.key === 'A' || e.code === 'KeyA')) {
       e.preventDefault();
       toggleEasterEgg(true);
-    } else if (e.key === 'Escape' && !easterModal.classList.contains('hidden')) {
+    } else if (e.key === 'Escape') {
       toggleEasterEgg(false);
+      toggleSidebar(false);
     }
   });
 
@@ -157,6 +163,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target === easterModal) toggleEasterEgg(false);
   });
 
-  // Khởi động bàn cờ lần đầu
+  window.addEventListener('resize', () => {
+    const frameSize = boardFrame.clientWidth || 450;
+    const cellFontSize = Math.max(12, Math.floor((frameSize / engine.size) * 0.58));
+    boardEl.querySelectorAll('.cell').forEach((cell) => {
+      cell.style.fontSize = `${cellFontSize}px`;
+    });
+  });
+
   renderBoard();
 });

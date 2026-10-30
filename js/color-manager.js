@@ -83,3 +83,4 @@ class ColorManager {
 }
 
 window.ColorManager = ColorManager;
+

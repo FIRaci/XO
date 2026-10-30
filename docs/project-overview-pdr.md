@@ -20,3 +20,4 @@
   - Euclidean RGB distance filter (< 35) ngăn chặn việc chọn 2 màu trùng hoặc quá giống nhau.
 - **Easter Egg**:
   - Lắng nghe sự kiện `Alt + A` toàn cục để mở modal quote: *"Hát ét rờ là một tựa game peak pít"*.
+

@@ -28,3 +28,4 @@
    - Nếu đầy bàn cờ: Trả về `draw`.
    - Ngược lại: Chuyển lượt và trả về `ongoing`.
 4. **View Update**: `app.js` gán màu từ `ColorManager.getColor(player)` cho quân cờ, hiển thị trạng thái và cập nhật bảng điểm.
+
