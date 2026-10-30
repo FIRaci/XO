@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cellFontSize = Math.max(12, Math.floor((frameSize / engine.size) * 0.58));
     const cellRadius = Math.max(4, Math.floor(36 / engine.size));
     boardEl.style.gap = `${engine.size > 8 ? 3 : 6}px`;
-    gameToast.classList.add('hidden');
+    gameToast.classList.remove('show');
 
     for (let r = 0; r < engine.size; r++) {
       for (let c = 0; c < engine.size; c++) {
@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cell.dataset.col = c;
         cell.style.fontSize = `${cellFontSize}px`;
         cell.style.borderRadius = `${cellRadius}px`;
+        cell.style.animationDelay = `${(r + c) * 0.015}s`;
         cell.setAttribute('role', 'button');
         cell.addEventListener('click', () => handleCellClick(r, c, cell));
         boardEl.appendChild(cell);
@@ -65,8 +66,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const moveResult = engine.makeMove(row, col);
     if (!moveResult) return;
 
-    cellEl.textContent = currentPlayer;
-    cellEl.style.color = colorManager.getColor(currentPlayer);
+    const mark = document.createElement('span');
+    mark.className = 'mark';
+    mark.textContent = currentPlayer;
+    mark.style.color = colorManager.getColor(currentPlayer);
+    cellEl.appendChild(mark);
 
     if (moveResult.status === 'win') {
       moveResult.winningCells.forEach(({ row: r, col: c }) => {
@@ -82,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function showToast(msg) {
     gameToast.textContent = msg;
-    gameToast.classList.remove('hidden');
+    gameToast.classList.add('show');
   }
 
   function updateScores() {
@@ -99,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function toggleSidebar(open) {
     sidebar.classList.toggle('open', open);
-    backdrop.classList.toggle('hidden', !open);
+    backdrop.classList.toggle('open', open);
   }
 
   btnOpenSettings.addEventListener('click', () => toggleSidebar(true));
@@ -137,14 +141,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   colorManager.setOnChange((colors) => {
-    boardEl.querySelectorAll('.cell').forEach((cell) => {
-      if (cell.textContent === 'X') cell.style.color = colors.X;
-      else if (cell.textContent === 'O') cell.style.color = colors.O;
+    boardEl.querySelectorAll('.cell .mark').forEach((mark) => {
+      if (mark.textContent === 'X') mark.style.color = colors.X;
+      else if (mark.textContent === 'O') mark.style.color = colors.O;
     });
   });
 
   function toggleEasterEgg(show) {
-    easterModal.classList.toggle('hidden', !show);
+    easterModal.classList.toggle('open', show);
   }
 
   window.addEventListener('keydown', (e) => {

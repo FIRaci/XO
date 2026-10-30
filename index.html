@@ -8,7 +8,6 @@
 </head>
 <body>
   <div class="app-layout">
-    <!-- Header: Tên trang web & Bảng tỉ số ngay bên dưới -->
     <header class="top-nav">
       <div class="title-section">
         <h1 class="brand-title">X O</h1>
@@ -21,27 +20,24 @@
         </div>
       </div>
 
-      <!-- Nút thao tác nhanh trên góc -->
       <div class="nav-actions">
         <button type="button" id="btn-quick-reset" class="btn-icon" title="Chơi lại ván mới" aria-label="Chơi lại">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
         </button>
-        <button type="button" id="btn-open-settings" class="btn-icon" title="Cài đặt bàn cờ & màu sắc" aria-label="Cài đặt">
+        <button type="button" id="btn-open-settings" class="btn-icon" title="Cài đặt" aria-label="Cài đặt">
           <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         </button>
       </div>
     </header>
 
-    <!-- Khu vực trung tâm: Bàn cờ chiếm gần full màn hình -->
     <main class="center-stage">
       <div class="board-frame" id="board-frame">
         <div id="board" class="game-board" role="grid" aria-label="Bàn cờ X O"></div>
       </div>
-      <div id="game-toast" class="game-toast hidden" role="status"></div>
+      <div id="game-toast" class="game-toast" role="status"></div>
     </main>
 
-    <!-- Sidebar Cài Đặt (Mặc định ẩn) -->
-    <div id="sidebar-backdrop" class="sidebar-backdrop hidden"></div>
+    <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
     <aside id="settings-sidebar" class="settings-sidebar" aria-label="Cài đặt trò chơi">
       <div class="sidebar-header">
         <h2>Cài đặt</h2>
@@ -49,7 +45,6 @@
       </div>
 
       <div class="sidebar-content">
-        <!-- Kích thước bàn cờ -->
         <section class="config-card">
           <label class="card-title">Kích thước bàn cờ</label>
           <div class="preset-row">
@@ -64,7 +59,6 @@
           <p class="rule-hint" id="win-rule-hint">Luật thắng: 3 ô liên tiếp</p>
         </section>
 
-        <!-- Màu sắc quân cờ -->
         <section class="config-card">
           <label class="card-title">Màu sắc quân cờ</label>
           <div class="color-list">
@@ -82,7 +76,6 @@
           <div id="color-error-msg" class="error-badge hidden">Màu của X và O không được trùng hoặc quá giống nhau!</div>
         </section>
 
-        <!-- Hành động -->
         <div class="sidebar-actions">
           <button type="button" id="btn-reset-game" class="btn-solid">Chơi ván mới</button>
           <button type="button" id="btn-reset-scores" class="btn-outline">Đặt lại tỉ số</button>
@@ -90,8 +83,7 @@
       </div>
     </aside>
 
-    <!-- Modal Easter Egg: Alt + A -->
-    <div id="easter-egg-modal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div id="easter-egg-modal" class="modal-overlay" role="dialog" aria-modal="true">
       <div class="modal-card">
         <div class="modal-head">
           <span class="badge">EASTER EGG // ALT + A</span>
